@@ -1,7 +1,10 @@
 import random,math,statistics
 from typing import List, Tuple
-import scipy
-
+from sklearn.cluster import AgglomerativeClustering, SpectralClustering
+from scipy.spatial.distance import pdist
+from scipy.spatial.distance import squareform
+from sklearn.cluster import DBSCAN
+from scipy.stats import kendalltau
 
 def cities_gen(cities_num=20,maximum_x=500,maximum_y=500):
     cities=[]
@@ -41,6 +44,13 @@ def crossover(parent1: List[int], parent2: List[int]) -> List[int]:
 
     return child
 
+def clustering():
+
+
+
+    pass
+
+
 def mutate(individual: List[int]) -> List[int]:
     idx1, idx2 = random.sample(range(len(individual)), 2)
     individual[idx1], individual[idx2] = individual[idx2], individual[idx1]
@@ -62,11 +72,11 @@ def ga_tsp(mut_rate,cities: List[Tuple[int, int]], population_size: int, generat
         # 中期, 保持种群稳定性,维持局部最优,
         #   选择: 按照适应度排序,选偶数位置的个体作为复制对象,
         #   交叉: 常规操作
-        #   变异: 应在各个稳定低谷保持一定的聚集数量, 首先计算各个序列之间的相似度, 再对相似度用密度聚类方法实现, 边缘变异率高, 中心变异率低
+        #   变异: 应在各个稳定低谷保持一定的聚集数量, 首先计算各个序列之间的相似度, 再对相似度用密度聚类方法实现, 边缘变异率高, 中心变异率低(这个方法非常耗时)
         # 后期, 种群加速收敛, 直接使用锦标赛规则,
         #   选择: 直接选最优的
         #   交叉: 常规操作
-        #   变异:
+        #   变异: 成绩最好的不变异, 成绩差的变异.
         fitness_scores = [fitness(individual, dist_matrix) for individual in population]
         min_score, max_score,mean_score = min(fitness_scores), max(fitness_scores),statistics.mean(fitness_scores)
         history_best_score = min(min_score, history_best_score)
